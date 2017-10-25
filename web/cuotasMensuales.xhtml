@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                template="/template.xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">    
+    <ui:define name="north">        
+        <ui:include src="/header.xhtml"/>
+    </ui:define>
+    <ui:define name="west">
+        <ui:include src="/menu.xhtml"/>
+    </ui:define>
+    <ui:define name="center">
+        <h:form id="formIngresos" enctype="multipart/form-data">     
+            <p:growl id="msgs" showDetail="true"/>
+                   
+            <p:fieldset style="margin-bottom:20px; font-size: 12px;">
+                <h:panelGrid columns="3" cellpadding="5">                    
+                    <h:outputText style="font-size: 12px;" value="Seleccione el periodo que desea consultar" />                    
+                    <p:selectOneMenu id="anio" value="#{ingresos.anioSeleccionado}" style="width:125px; font-size: 12px">
+                        <f:selectItem itemLabel="Seleccione" itemValue="" />
+                        <f:selectItem itemLabel="2016" itemValue="2016" />
+                        <f:selectItem itemLabel="2017" itemValue="2017" />                        
+                    </p:selectOneMenu>
+                    <p:commandButton value="Consultar"  style="font-size: 12px;" 
+                                     action="#{ingresos.listarIngresosPorPropietario}" update=":formIngresos:tabla"/>
+                </h:panelGrid>
+            </p:fieldset>          
+            
+            <p:dataTable id="tabla" widgetVar="tabla" var="varIngreso" value="#{ingresos.listaIngresos}"  
+                         style="width: 850px; font-size: 12px;" emptyMessage=" ">
+                
+                <f:facet name="header" >
+                    <div style="font-size: 12px;">Cuotas Ordinarias del periodo #{ingresos.anioSeleccionado} </div>
+                </f:facet>
+      
+                <p:column headerText="Mes Pagado" style="font-size: 12px;">
+                    <h:outputText value="#{ingresos.obtenerNombreMes(varIngreso.mes)}" />
+                </p:column>    
+                <p:column headerText="Fecha de Pago" style="font-size: 12px;">
+                    <h:outputText value="#{varIngreso.fechaPago}" >
+                        <f:convertDateTime type="date" pattern="dd-MM-yyyy" dateStyle="short" locale="es"/>                        
+                    </h:outputText>                       
+                </p:column>
+                <p:column headerText="Monto Pagado" style="font-size: 12px;">
+                   <h:outputText value="#{varIngreso.monto}" />                      
+                </p:column>
+                <p:column headerText="Nro Operación" style="font-size: 12px;">
+                   <h:outputText value="#{varIngreso.nroOperacion}" />                      
+                </p:column>
+                <p:column headerText="Archivo Voucher" style="font-size: 12px; width: 250px; word-wrap: break-word;" >
+                    <p:commandLink value="#{varIngreso.nombreArchivoVoucher}" action="#{ingresos.descargarArchivo}"
+                                   ajax="false" title="Clic para descargar">
+                        <f:param name="idIngreso" value="#{varIngreso.idIngreso}" />
+                        <p:fileDownload value="#{ingresos.fileDownload}" />
+                    </p:commandLink>                                   
+                </p:column>
+                <p:column headerText="Opciones" style="font-size: 12px; width: 112px;">                     
+                    <p:commandButton rendered="#{varIngreso.idIngreso != null}" value="Actualizar Pago" style="width: 112px;" 
+                                     title="Editar Pago" action="#{ingresos.updateRow}" update=":formIngresos:editDialog" >        
+                        <f:param name="idIngreso" value="#{varIngreso.idIngreso}" />
+                        <f:param name="mes" value="#{varIngreso.mes}" />
+                    </p:commandButton> 
+                    <p:commandButton rendered="#{varIngreso.idIngreso == null}" value="Registrar Pago" style="width: 110px; "
+                                     title="Registrar Pago" action="#{ingresos.updateRow}">        
+                        <f:param name="idIngreso" value="#{varIngreso.idIngreso}" />
+                        <f:param name="mes" value="#{varIngreso.mes}" />
+                    </p:commandButton>  
+                </p:column>
+            </p:dataTable>
+              
+            
+            <p:dialog id="editDialog" header="Actualizar Pago" widgetVar="editDialog" modal="false" resizable="false" style="font-size: 12px;">
+                <h:panelGrid columns="2" cellpadding="5" style="font-size: 12px;">            
+                    
+                    <h:outputText value="Monto:" />
+                    <p:inputNumber  value="#{ingresos.ingreso.monto}" decimalSeparator="." thousandSeparator="," />
+                    
+                    <h:outputText value="Nro. Operación" />
+                    <p:inputText  value="#{ingresos.ingreso.nroOperacion}" />
+                    
+                    <h:outputText value="Fecha de Pago:" />
+                    <p:calendar value="#{ingresos.ingreso.fechaPago}" pattern="dd-MM-yyyy" />                      
+                                                
+                </h:panelGrid>
+                <br/>
+                <h:panelGrid columns="2" cellpadding="5" style="font-size: 12px;">
+                    <h:outputText value="Archivo Voucher Actual:" />
+                    <h:outputText  value="#{ingresos.ingreso.nombreArchivoVoucher}" />
+                    
+                    <h:outputText value="Archivo Voucher Nuevo" />
+                    <p:fileUpload value="#{ingresos.file}" mode="simple" />                            
+                </h:panelGrid>
+                <br/>
+                <p:commandButton action="#{ingresos.grabarPago2}" value="Grabar" style="font-size: 12px;" />                     
+            </p:dialog>  
+            
+            <p:dialog id="insertDialog" header="Registrar Pago" widgetVar="insertDialog" modal="false" resizable="false" style="font-size: 12px;">
+                <h:panelGrid columns="2" cellpadding="5" style="font-size: 12px;">            
+                    
+                    <h:outputText value="Monto:" />
+                    <p:inputNumber  value="#{ingresos.ingreso.monto}" decimalSeparator="." thousandSeparator="," />
+                    
+                    <h:outputText value="Nro. Operación" />
+                    <p:inputText  value="#{ingresos.ingreso.nroOperacion}" />
+                    
+                    <h:outputText value="Fecha de Pago:" />
+                    <p:calendar value="#{ingresos.ingreso.fechaPago}" pattern="dd-MM-yyyy" />                      
+                   
+                </h:panelGrid>
+                <br/>
+                <h:panelGrid columns="2" cellpadding="5" style="font-size: 12px;"> 
+                    <h:outputText value="Adjuntar Voucher:" />
+                    <p:fileUpload value="#{ingresos.file}" mode="simple"/>
+                </h:panelGrid>
+                <br/>
+                <h:commandButton actionListener="#{ingresos.grabarPago}" value="Grabar" />   
+            </p:dialog>  
+            
+         </h:form>
+        
+    </ui:define>
+      
+</ui:composition>
+
+  

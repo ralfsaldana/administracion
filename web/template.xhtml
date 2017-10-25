@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>Bonavista</title>
+            </f:facet>
+           
+        </h:head>
+
+        <h:body style="font-size: 70%;" > <!-- se rebaja el font-size, porque por defecto sale todo muy grande-->
+            <p:layout fullPage="true">
+
+                <p:layoutUnit position="north" size="102" resizable="false" > 
+                    <ui:insert name="north" >
+                       Norte
+                    </ui:insert>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="west" size="180" style="padding: 5px;">
+                    <ui:insert name="west" >
+                        Oeste
+                    </ui:insert>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="center" style="padding: 5px;">
+                   <ui:insert name="center" >
+                        Centro
+                   </ui:insert>
+                </p:layoutUnit>
+               
+<!--                <p:layoutUnit position="south"  style="padding: 5px;">
+                    <div style="text-align: center;"> <h:outputText value="Intranet Propietarios - 2017" /></div>
+                </p:layoutUnit>-->
+
+            </p:layout>
+
+        </h:body>
+
+    </f:view>
+</html>
+

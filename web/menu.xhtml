@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+
+    <h:form>
+        <p:menu>
+            <p:submenu label="Información General">
+                <p:menuitem value="Mi Perfil" action="#{menu.redireccionar}">                                
+                     <f:param name="destino" value="profile" />
+                </p:menuitem>
+            </p:submenu>                            
+            <p:submenu label="Pagos">
+                <p:menuitem value="Cuotas Mensuales"  action="#{menu.redireccionar}">
+                    <f:param name="destino" value="cuotaMensual" />
+                </p:menuitem>
+                <p:menuitem value="Cuotas Extraordinarias" />
+            </p:submenu>
+            <p:submenu label="Reportes">
+                <p:menuitem value="Ingresos"  />
+                <p:menuitem value="Egresos" />
+            </p:submenu>
+            <p:submenu label="Configuración">
+                <p:menuitem value="Cambiar Clave"  />
+                <p:menuitem value="Cerrar Sesión" action="#{login.cerrarSesion()}"/>
+            </p:submenu>
+        </p:menu>
+    </h:form>
+
+</html>
