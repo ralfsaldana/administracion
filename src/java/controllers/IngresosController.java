@@ -94,6 +94,7 @@ public class IngresosController implements Serializable{
    
    public void grabarPago(ActionEvent e){  
        try {
+           System.out.println("grabarPago");
            //solamente si se ha adjuntado un nuevo voucher
            if(file!=null){
                ingreso.setVoucher(file.getContents()); 
@@ -128,7 +129,7 @@ public class IngresosController implements Serializable{
        }
    }
    
-   public void descargarArchivo(ActionEvent ev){
+   public void descargarArchivo(){
        try {
            Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();               
            Long idIngresoTemp = new Long(params.get("idIngreso"));
