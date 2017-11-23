@@ -8,10 +8,10 @@
                 template="/template.xhtml"
                 xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">    
     <ui:define name="north">        
-        <ui:include src="/header.xhtml"/>
+        <ui:include src="/header.xhtml" />
     </ui:define>
     <ui:define name="west">
-        <ui:include src="/menu.xhtml"/>
+        <ui:include src="/menu.xhtml"/> 
     </ui:define>
     <ui:define name="center">
         <h:form id="formIngresos" enctype="multipart/form-data">     
@@ -61,7 +61,7 @@
                 </p:column>
                 <p:column headerText="Opciones" style="font-size: 12px; width: 112px;">                     
                     <p:commandButton rendered="#{varIngreso.idIngreso != null}" value="Actualizar Pago" style="width: 112px;" 
-                                     title="Editar Pago" action="#{ingresos.updateRow}" update=":formIngresos:editDialog" >        
+                                     title="Editar Pago" action="#{ingresos.updateRow}" update=":formIngresosUpdate" >        
                         <f:param name="idIngreso" value="#{varIngreso.idIngreso}" />
                         <f:param name="mes" value="#{varIngreso.mes}" />
                     </p:commandButton> 
@@ -72,13 +72,14 @@
                     </p:commandButton>  
                 </p:column>
             </p:dataTable>
-              
+           </h:form>  
             
-            <p:dialog id="editDialog" header="Actualizar Pago" widgetVar="editDialog" modal="false" resizable="false" style="font-size: 12px;">               
+            <p:dialog id="editDialog" header="Actualizar Pago" widgetVar="editDialog" modal="false" resizable="false" style="font-size: 12px;" >
+                <h:form id="formIngresosUpdate" enctype="multipart/form-data">     
                     <h:panelGrid columns="2" cellpadding="5" style="font-size: 12px;">            
 
                         <h:outputText value="Monto:" />
-                        <p:inputNumber  value="#{ingresos.ingreso.monto}" decimalSeparator="." thousandSeparator="," />
+                        <p:inputNumber  value="#{ingresos.ingreso.monto}" decimalSeparator="." thousandSeparator="," immediate="true"/>
 
                         <h:outputText value="Nro. Operación" />
                         <p:inputText  value="#{ingresos.ingreso.nroOperacion}" />
@@ -93,13 +94,15 @@
                         <h:outputText  value="#{ingresos.ingreso.nombreArchivoVoucher}" />
 
                         <h:outputText value="Archivo Voucher Nuevo" />
-                        <p:fileUpload value="#{ingresos.file}" mode="simple" />                            
+                        <p:fileUpload value="#{ingresos.file}" mode="simple" auto="true" />                            
                     </h:panelGrid>
                     <br/>
-                    <p:commandButton actionListener="#{ingresos.grabarPago}" value="Grabar" style="font-size: 12px;" ajax="false"/>                                    
+                    <h:commandButton actionListener="#{ingresos.grabarPago}" value="Grabar" style="font-size: 12px;" immediate="true"/>                                    
+                </h:form>
             </p:dialog>  
             
             <p:dialog id="insertDialog" header="Registrar Pago" widgetVar="insertDialog" modal="false" resizable="false" style="font-size: 12px;">
+                <h:form id="formIngresosInsert" enctype="multipart/form-data">     
                 <h:panelGrid columns="2" cellpadding="5" style="font-size: 12px;">            
                     
                     <h:outputText value="Monto:" />
@@ -118,10 +121,11 @@
                     <p:fileUpload value="#{ingresos.file}" mode="simple"/>
                 </h:panelGrid>
                 <br/>
-                <p:commandButton actionListener="#{ingresos.grabarPago}" value="Grabar" style="font-size: 12px;" ajax="false"/>   
+                <h:commandButton actionListener="#{ingresos.grabarPago}" value="Grabar" style="font-size: 12px;" />   
+                </h:form>
             </p:dialog>  
             
-         </h:form>
+         
         
     </ui:define>
       
